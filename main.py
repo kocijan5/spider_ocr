@@ -47,4 +47,3 @@ if __name__ == "__main__":
         cv2.waitKey(0)
 
         print(pytesseract.image_to_string(img, config=custom_config))
-        print("sss")
