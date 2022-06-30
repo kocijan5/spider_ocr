@@ -38,9 +38,9 @@ def thresh_callback(val, img):
     cv2.imshow('Contours', drawing)
 
 def preprocess(src):
-    img_ = cv2.resize(src, (1024,720))
-    img = get_grayscale(img_)
-    img = cv2.GaussianBlur(img, (5,5), 0)
+    #img_ = cv2.resize(src, (1024,720))
+    img_ = get_grayscale(src)
+    img = cv2.GaussianBlur(img_, (5,5), 0)
     img = cv2.dilate(img, (5,5))
     img = cv2.erode(img, (5,5))
     edges = cv2.Canny(img, 180, 255)
@@ -58,19 +58,16 @@ def preprocess(src):
 
     """cv2.imshow('img', img)
     cv2.waitKey(0)"""
-    return img
+    return img_
 
 if __name__ == "__main__":
     imgs = []
-    for f in glob.glob('./figs/*.jpg'):
+    for f in glob.glob('./figs/*'):
         imgs.append(preprocess(cv2.imread(f)))
 
     custom_config = r'--oem 3 --psm 6'
 
     for img in imgs:
+        print(img.shape)
         h, w = img.shape
-        boxes = pytesseract.image_to_boxes(img)
-        for b in boxes.splitlines():
-            b = b.split(' ')
-            img = cv2.rectangle(img, (int(b[1]), h - int(b[2])), (int(b[3]), h - int(b[4])), (0, 255, 0), 2)
         print(pytesseract.image_to_string(img, config=custom_config))
